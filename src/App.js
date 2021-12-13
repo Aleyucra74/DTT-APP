@@ -1,33 +1,39 @@
 import React, { useState } from 'react';
 import './App.css';
 import axios from 'axios';
+import { render } from '@testing-library/react';
 
 //import DttImg from './img/BlackBackgorundDeloitte.png';
 
 function App() {
   const [file, setFile] = useState();
   const [isFilePicked, setIsFilePicked] = useState(false);
-  const [nota, setNota] = useState({});
-  let x = "";
+  const [nota, setNota] = useState(0);
 
   async function handleSubmit(event) {
     event.preventDefault()
     const formData = new FormData();
+    // formData.append("file", !file ? {
+    //   name: "",
+    //   type: "",
+    //   size: "",
+    //   lastModifiedDate: ""
+    // } : file);
     formData.append("file", file);
     try {
       const response = await axios({
         method: "post",
-        url: "http://8367-35-221-3-11.ngrok.io/",
+        url: "http://7497-34-90-77-26.ngrok.io/",
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
       }).then((resposta) => {
         console.log(resposta);
-        x = resposta.data;
+        setNota(resposta.data.predict);
       })
     } catch (error) {
       console.log(error)
     }
-    console.log(x);
+    console.log(nota);
   }
 
   const changeHandler = (event) => {
@@ -35,13 +41,33 @@ function App() {
     setIsFilePicked(true);
   };
 
-  function renderPrediction() {
-    if(x.predict == 0){
-      return <h3>Macae</h3>
-    } else if (x.predict == 1){
-      return <h3>Rio de janeiro</h3>
-    } else if(x.predict ==2){
-      return <h3>São Paulo</h3>
+  const renderPrediction = (nota) => {
+    if(nota === 2){
+      return <h3>CAMPINAS</h3>
+    } else if (nota === 3) {
+      return <h3>FORTALEZA</h3>
+    } else if (nota === 4) {
+      return <h3>HORTOLANDIA</h3>
+    } else if (nota === 5) {
+      return <h3>JUNDIAI</h3>
+    } else if (nota === 6) {
+      return <h3>MACAE</h3>
+    } else if (nota === 7) {
+      return <h3>POUSO ALEGRE</h3>
+    }else if (nota === 8) {
+      return <h3>SAO PAULO</h3>
+    } else if (nota === 9) {
+      return <h3>RIO DE JANEIRO</h3>
+    } else if (nota === 10) {
+      return <h3>SANTOS</h3>
+    } else if (nota === 12) {
+      return <h3>SAO CAETANO DO SUL</h3>
+    } else if (nota === 14) {
+      return <h3>SOROCABA</h3>
+    } else if (nota === 15) {
+      return <h3>VITORIA</h3>
+    } else {
+      return <h3>Nao existe no modelo</h3>
     }
   }
 
@@ -84,7 +110,7 @@ function App() {
           </div>
         </form>
         <div>
-          {renderPrediction()}
+          {renderPrediction(nota)}
         </div>
         {/* footer */}
         <footer>
